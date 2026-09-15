@@ -1,0 +1,403 @@
+[
+  {
+    "key": "it_news",
+    "category": "news",
+    "kind": "rss",
+    "title": "IT 뉴스",
+    "endpoint": "https://zdnet.co.kr/news/news_xml.asp",
+    "schedule": "hourly",
+    "limit": 15
+  },
+  {
+    "key": "it_news_global",
+    "category": "news",
+    "kind": "rss",
+    "title": "해외 IT 뉴스",
+    "endpoint": "https://www.theverge.com/rss/index.xml",
+    "schedule": "noon",
+    "limit": 12
+  },
+  {
+    "key": "ai_news",
+    "category": "news",
+    "kind": "rss",
+    "title": "AI 뉴스",
+    "endpoint": "https://huggingface.co/blog/feed.xml",
+    "schedule": "daily",
+    "limit": 12
+  },
+  {
+    "key": "ai_news_openai",
+    "category": "news",
+    "kind": "rss",
+    "title": "OpenAI 소식",
+    "endpoint": "https://openai.com/news/rss.xml",
+    "schedule": "daily",
+    "limit": 8
+  },
+  {
+    "key": "game_news",
+    "category": "game-news",
+    "kind": "rss",
+    "title": "게임 뉴스",
+    "endpoint": "https://www.polygon.com/rss/index.xml",
+    "schedule": "night",
+    "limit": 12
+  },
+  {
+    "key": "security_news",
+    "category": "security",
+    "kind": "rss",
+    "title": "보안 뉴스",
+    "endpoint": "https://feeds.feedburner.com/TheHackersNews",
+    "schedule": "daily",
+    "limit": 10
+  },
+  {
+    "key": "gamedev_articles",
+    "category": "gamedev",
+    "kind": "rss",
+    "title": "게임 개발 아티클",
+    "endpoint": "https://www.gamedeveloper.com/rss.xml",
+    "schedule": "night",
+    "limit": 10
+  },
+  {
+    "key": "hackernews",
+    "category": "news",
+    "kind": "rest",
+    "title": "해커뉴스 프론트페이지",
+    "endpoint": "https://hn.algolia.com/api/v1/search?tags=front_page&hitsPerPage=15",
+    "root": "$.hits",
+    "schedule": "noon",
+    "limit": 15,
+    "map": {
+      "external_id": "$.objectID",
+      "title": "$.title",
+      "url": "$.url",
+      "summary": "{{$.points}}점 · 댓글 {{$.num_comments}}",
+      "published_at": "$.created_at"
+    }
+  },
+  {
+    "key": "steam_top_sellers",
+    "category": "game-deal",
+    "kind": "rest",
+    "title": "Steam 인기 게임",
+    "endpoint": "https://store.steampowered.com/api/featuredcategories?cc=kr&l=korean",
+    "root": "$.top_sellers.items",
+    "schedule": "daily",
+    "limit": 10,
+    "map": {
+      "external_id": "$.id",
+      "title": "$.name",
+      "url": "https://store.steampowered.com/app/{{$.id}}",
+      "summary": "최종가 {{$.final_price}}원 · 할인 {{$.discount_percent}}%",
+      "image": "$.large_capsule_image"
+    }
+  },
+  {
+    "key": "steam_new_releases",
+    "category": "game-news",
+    "kind": "rest",
+    "title": "Steam 신규 출시",
+    "endpoint": "https://store.steampowered.com/api/featuredcategories?cc=kr&l=korean",
+    "root": "$.new_releases.items",
+    "schedule": "night",
+    "limit": 10,
+    "map": {
+      "external_id": "$.id",
+      "title": "$.name",
+      "url": "https://store.steampowered.com/app/{{$.id}}",
+      "image": "$.large_capsule_image"
+    }
+  },
+  {
+    "key": "steam_news",
+    "category": "game-news",
+    "kind": "rest",
+    "title": "찜한 게임 소식",
+    "endpoint": "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid={{ref}}&count=5&maxlength=400&format=json",
+    "root": "$.appnews.newsitems",
+    "schedule": "daily",
+    "foreach": {
+      "watch_kind": "steam_app"
+    },
+    "limit": 5,
+    "map": {
+      "external_id": "$.gid",
+      "title": "$.title",
+      "url": "$.url",
+      "summary": "$.contents",
+      "published_at": "$.date",
+      "image": "https://cdn.cloudflare.steamstatic.com/steam/apps/{{ref}}/capsule_231x87.jpg"
+    }
+  },
+  {
+    "key": "steam_players",
+    "category": "game-mine",
+    "kind": "rest",
+    "title": "찜한 게임 동시접속자",
+    "endpoint": "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={{ref}}",
+    "root": "$.response",
+    "schedule": "daily",
+    "foreach": {
+      "watch_kind": "steam_app"
+    },
+    "snapshot": {
+      "metric_key": "steam_players|{{ref}}",
+      "value": "$.player_count",
+      "label": "{{label}} 동시접속자"
+    }
+  },
+  {
+    "key": "steam_reviews",
+    "category": "game-mine",
+    "kind": "rest",
+    "title": "찜한 게임 리뷰 긍정률",
+    "endpoint": "https://store.steampowered.com/appreviews/{{ref}}?json=1&language=all&purchase_type=all&num_per_page=0",
+    "root": "$.query_summary",
+    "schedule": "daily",
+    "foreach": {
+      "watch_kind": "steam_app"
+    },
+    "snapshot": {
+      "metric_key": "steam_reviews|{{ref}}",
+      "value": "$.total_positive",
+      "divisor": "$.total_reviews",
+      "label": "{{label}} 긍정률(%)"
+    }
+  },
+  {
+    "key": "itad_price",
+    "category": "game-deal",
+    "kind": "rest",
+    "title": "찜한 게임 최저가",
+    "endpoint": "https://api.isthereanydeal.com/games/prices/v3?key={{env.ITAD_API_KEY}}&country=KR&capacity=1",
+    "method": "POST",
+    "body": [
+      "{{ref}}"
+    ],
+    "root": "$[0].deals[0]",
+    "schedule": "daily",
+    "requires": [
+      "ITAD_API_KEY"
+    ],
+    "foreach": {
+      "watch_kind": "itad_game"
+    },
+    "map": {
+      "external_id": "itad-{{ref}}-{{$.price.amount}}",
+      "title": "{{label}} 최저가 {{$.price.amount}}{{$.price.currency}}",
+      "url": "$.url",
+      "summary": "{{$.shop.name}} · 정가 대비 -{{$.cut}}%",
+      "image": "https://cdn.cloudflare.steamstatic.com/steam/apps/{{ref}}/capsule_231x87.jpg"
+    },
+    "snapshot": {
+      "metric_key": "itad_price|{{ref}}",
+      "value": "$.price.amount",
+      "label": "{{label}} 최저가"
+    }
+  },
+  {
+    "key": "naver_part_price",
+    "category": "hardware",
+    "kind": "rest",
+    "title": "부품 최저가",
+    "endpoint": "https://openapi.naver.com/v1/search/shop.json?query={{ref}}&display=1&sort=asc",
+    "headers": {
+      "X-Naver-Client-Id": "{{env.NAVER_CLIENT_ID}}",
+      "X-Naver-Client-Secret": "{{env.NAVER_CLIENT_SECRET}}"
+    },
+    "root": "$.items[0]",
+    "schedule": "daily",
+    "requires": [
+      "NAVER_CLIENT_ID",
+      "NAVER_CLIENT_SECRET"
+    ],
+    "foreach": {
+      "watch_kind": "part"
+    },
+    "map": {
+      "external_id": "naver-{{ref}}-{{$.lprice}}",
+      "title": "{{label}} {{$.lprice}}원",
+      "url": "$.link",
+      "summary": "$.mallName"
+    },
+    "snapshot": {
+      "metric_key": "naver_part_price|{{ref}}",
+      "value": "$.lprice",
+      "label": "{{label}} 최저가"
+    }
+  },
+  {
+    "key": "lol_rank",
+    "category": "game-mine",
+    "kind": "rest",
+    "title": "내 롤 전적",
+    "endpoint": "https://kr.api.riotgames.com/lol/league/v4/entries/by-puuid/{{env.RIOT_PUUID}}?api_key={{env.RIOT_API_KEY}}",
+    "schedule": "daily",
+    "requires": [
+      "RIOT_API_KEY",
+      "RIOT_PUUID"
+    ],
+    "limit": 3,
+    "map": {
+      "external_id": "{{$.queueType}}-{{$.leaguePoints}}-{{$.wins}}",
+      "title": "{{$.queueType}} {{$.tier}} {{$.rank}} {{$.leaguePoints}}LP",
+      "summary": "{{$.wins}}승 {{$.losses}}패"
+    },
+    "snapshot": {
+      "metric_key": "lol_rank|{{$.queueType}}",
+      "value": "$.leaguePoints",
+      "label": "리그 포인트"
+    }
+  },
+  {
+    "key": "jpop_lastfm",
+    "category": "music",
+    "kind": "rest",
+    "title": "JPOP 인기 트랙",
+    "endpoint": "https://ws.audioscrobbler.com/2.0/?method=tag.gettoptracks&tag=jpop&api_key={{env.LASTFM_API_KEY}}&format=json&limit=10",
+    "root": "$.tracks.track",
+    "schedule": "night",
+    "requires": [
+      "LASTFM_API_KEY"
+    ],
+    "limit": 10,
+    "map": {
+      "external_id": "$.url",
+      "title": "{{$.name}} — {{$.artist.name}}",
+      "url": "$.url",
+      "image": "$.image[2].#text"
+    }
+  },
+  {
+    "key": "jpop_youtube",
+    "category": "music",
+    "kind": "rest",
+    "title": "일본 음악 인기 영상",
+    "endpoint": "https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostPopular&videoCategoryId=10&regionCode=JP&maxResults=10&key={{env.YOUTUBE_API_KEY}}",
+    "root": "$.items",
+    "schedule": "night",
+    "requires": [
+      "YOUTUBE_API_KEY"
+    ],
+    "limit": 10,
+    "map": {
+      "external_id": "$.id",
+      "title": "$.snippet.title",
+      "url": "https://youtu.be/{{$.id}}",
+      "summary": "$.snippet.channelTitle",
+      "published_at": "$.snippet.publishedAt",
+      "image": "$.snippet.thumbnails.medium.url"
+    }
+  },
+  {
+    "key": "github_activity",
+    "category": "dev-mine",
+    "kind": "github",
+    "title": "내 GitHub 활동",
+    "mode": "activity",
+    "schedule": "daily",
+    "requires": [
+      "GITHUB_TOKEN",
+      "GITHUB_LOGIN"
+    ]
+  },
+  {
+    "key": "github_trending",
+    "category": "dev-mine",
+    "kind": "github",
+    "title": "GitHub 급상승 (근사)",
+    "mode": "trending",
+    "query": "created:>{{daysAgo:14}} stars:>100",
+    "schedule": "daily",
+    "limit": 10
+  },
+  {
+    "key": "framework_releases",
+    "category": "dev-mine",
+    "kind": "github",
+    "title": "프레임워크 · 에디터 릴리즈",
+    "mode": "releases",
+    "schedule": "daily",
+    "repos": [
+      "vercel/next.js",
+      "facebook/react",
+      "microsoft/vscode",
+      "tailwindlabs/tailwindcss",
+      "supabase/supabase"
+    ]
+  },
+  {
+    "key": "osv_vulns",
+    "category": "security",
+    "kind": "github",
+    "title": "내 라이브러리 취약점",
+    "mode": "osv",
+    "schedule": "daily",
+    "packages": [
+      "npm:next",
+      "npm:react",
+      "npm:@supabase/supabase-js"
+    ]
+  },
+  {
+    "key": "llm_coding_tip",
+    "category": "learn",
+    "kind": "llm",
+    "title": "오늘의 코딩 꿀팁",
+    "schedule": "daily",
+    "count": 1,
+    "prompt": "Next.js·TypeScript·Unity(C#)를 주로 쓰는 고등학생 개발자에게 오늘 바로 써먹을 수 있는 코딩 꿀팁 하나를 알려줘라. 짧은 코드 예시를 summary 안에 포함해라."
+  },
+  {
+    "key": "llm_learn_today",
+    "category": "learn",
+    "kind": "llm",
+    "title": "오늘 배울 기술 1개",
+    "schedule": "daily",
+    "count": 1,
+    "prompt": "웹(Next.js/Supabase)과 게임(Unity) 개발을 병행하는 사람에게 오늘 30분 안에 익힐 수 있는 기술 개념 하나를 골라라. 무엇인지, 왜 쓰는지, 어디에 바로 적용할 수 있는지를 summary에 담아라."
+  },
+  {
+    "key": "llm_game_rec",
+    "category": "learn",
+    "kind": "llm",
+    "title": "게임 추천",
+    "schedule": "night",
+    "count": 1,
+    "prompt": "게임 개발을 공부하는 사람에게 '시스템 설계 관점에서 배울 게 있는' 게임 하나를 추천해라. 무엇을 뜯어보면 좋은지를 구체적으로 써라."
+  },
+  {
+    "key": "pochams_meta_links",
+    "category": "link",
+    "kind": "rest",
+    "title": "포켓몬 챔피언스 메타 (링크)",
+    "schedule": "daily",
+    "links": [
+      {
+        "title": "포켓몬 챔피언스 공식 사이트",
+        "url": "https://www.pokemon.com/"
+      },
+      {
+        "title": "레귤레이션 · 룰 확인",
+        "url": "https://www.pokemon.co.kr/"
+      }
+    ]
+  },
+  {
+    "key": "lol_meta_links",
+    "category": "link",
+    "kind": "rest",
+    "title": "롤 패치 · 메타 (링크)",
+    "schedule": "daily",
+    "links": [
+      {
+        "title": "리그 오브 레전드 패치노트",
+        "url": "https://www.leagueoflegends.com/ko-kr/news/tags/patch-notes/"
+      }
+    ]
+  }
+]

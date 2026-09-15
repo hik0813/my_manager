@@ -1,0 +1,517 @@
+<title>비서 사용 설명서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap">
+
+<style>
+  /* 앱 자체의 토큰을 그대로 쓴다 — 이 문서는 그 앱의 설명서다.
+     앱이 다크 전용으로 설계됐으므로 이 페이지도 한 가지 세계에 고정하고
+     모든 색을 명시적으로 칠한다. */
+  :root {
+    --bg: #0b0e14;
+    --surface: #131822;
+    --surface2: #1b2231;
+    --line: #263041;
+    --line-soft: #1c2433;
+    --text: #e6eaf2;
+    --muted: #8a94a6;
+    --dim: #5b6577;
+    --accent: #ffb020;
+    --ok: #3fd68c;
+    --danger: #ff5c5c;
+
+    --sans: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+    margin: 0;
+  }
+
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 48px 96px;
+  }
+
+  /* ── 머리 ─────────────────────────────────────── */
+  header { border-bottom: 1px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+
+  .mark {
+    display: block;
+    width: 34px; height: 34px;
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(28px, 6vw, 38px);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+
+  .lede { color: var(--muted); font-size: 16px; margin: 0; max-width: 54ch; }
+
+  /* ── 섹션 ─────────────────────────────────────── */
+  section { padding-block: 40px; border-bottom: 1px solid var(--line-soft); }
+  section:last-of-type { border-bottom: none; }
+
+  h2 {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    text-wrap: balance;
+  }
+
+  h2 .tabname {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+    border-radius: 3px;
+    padding: 2px 6px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 28px 0 8px;
+    color: var(--text);
+  }
+
+  .sub { color: var(--muted); margin: 0 0 20px; max-width: 58ch; }
+
+  p { margin: 0 0 14px; max-width: 62ch; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── 항목 목록: 카드가 아니라 줄 ────────────────── */
+  dl { margin: 0; display: grid; gap: 0; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 6px 20px;
+    padding-block: 13px;
+    border-top: 1px solid var(--line-soft);
+    align-items: start;
+  }
+  .row:last-child { border-bottom: 1px solid var(--line-soft); }
+
+  .row dt { font-weight: 500; color: var(--text); }
+  .row dd { margin: 0; color: var(--muted); }
+  .row dd strong { color: var(--text); font-weight: 500; }
+
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 1fr; gap: 3px; padding-block: 14px; }
+  }
+
+  /* ── 표 ───────────────────────────────────────── */
+  .scroller { overflow-x: auto; margin-block: 4px 8px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 460px; }
+  th, td { text-align: left; padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--dim);
+    border-bottom-color: var(--line);
+    white-space: nowrap;
+  }
+  td { color: var(--muted); }
+  td:first-child { color: var(--text); font-weight: 400; }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text); }
+
+  /* ── 코드 ─────────────────────────────────────── */
+  code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--surface2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 0 0 16px;
+    color: var(--text);
+  }
+  pre code { background: none; border: none; padding: 0; font-size: inherit; white-space: pre; }
+  .c { color: var(--dim); }
+  .k { color: var(--accent); }
+
+  /* ── 흐름도 ───────────────────────────────────── */
+  .flow { display: grid; gap: 0; margin-block: 4px 20px; counter-reset: step; }
+  .step {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 14px;
+    padding-block: 11px;
+    border-top: 1px solid var(--line-soft);
+    align-items: baseline;
+  }
+  .step:last-child { border-bottom: 1px solid var(--line-soft); }
+  .step::before {
+    counter-increment: step;
+    content: counter(step);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .step b { font-weight: 500; }
+  .step span { color: var(--muted); display: block; font-size: 14px; }
+
+  /* ── 강조 박스 ─────────────────────────────────── */
+  .note {
+    border-left: 2px solid var(--accent);
+    padding: 2px 0 2px 16px;
+    margin-block: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .note b { color: var(--text); font-weight: 500; }
+
+  .warn { border-left-color: var(--danger); }
+  .warn b { color: var(--danger); }
+
+  /* ── 상태 점 ───────────────────────────────────── */
+  .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 7px;
+    vertical-align: 1px;
+  }
+  .dot.on { background: var(--ok); }
+  .dot.off { background: var(--dim); }
+
+  ul.plain { margin: 0 0 14px; padding-left: 18px; color: var(--muted); }
+  ul.plain li { margin-bottom: 5px; }
+  ul.plain li::marker { color: var(--dim); }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in oklab, var(--accent) 30%, transparent); }
+  a:hover { border-bottom-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  footer { padding-top: 36px; color: var(--dim); font-size: 13px; border-top: 1px solid var(--line); margin-top: 8px; }
+</style>
+
+<div class="wrap">
+
+<header>
+  <svg class="mark" viewBox="0 0 34 34" aria-hidden="true">
+    <line x1="7" y1="27" x2="27" y2="7" stroke="#ffb020" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="10" cy="10" r="2.6" fill="#e6eaf2"/>
+  </svg>
+  <h1>비서 사용 설명서</h1>
+  <p class="lede">
+    화면 다섯 개, 자동으로 도는 일 여섯 개, 울리는 조건 다섯 개.
+    어디에 뭐가 있고 무엇이 알아서 굴러가는지 한 장에 정리했다.
+  </p>
+</header>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>먼저, 매일 하는 것<span class="tabname">하루 한 바퀴</span></h2>
+  <p class="sub">이 앱은 기능이 많아서 여는 게 아니라, 아침에 한 번 읽고 수시로 한 줄 던지려고 여는 앱이다.</p>
+
+  <div class="flow">
+    <div class="step"><div><b>아침</b><span>텔레그램으로 브리핑이 온다. 읽고 앱을 열어 오늘의 핵심 3개만 본다.</span></div></div>
+    <div class="step"><div><b>수시로</b><span>뭐든 떠오르면 오른쪽 아래 <code>+</code> → 한 줄 → 엔터. 분류는 알아서 된다.</span></div></div>
+    <div class="step"><div><b>기사 볼 때</b><span>사파리 공유 시트 → 비서에 저장. 본문을 3줄로 줄여 문서고에 넣는다.</span></div></div>
+    <div class="step"><div><b>자기 전</b><span>오늘 화면 맨 아래 <b>하루 한 줄</b>에 한 문장.</span></div></div>
+    <div class="step"><div><b>일요일 밤</b><span>주간 리포트가 텔레그램으로 온다. 덕담이 아니라 방치된 걸 짚는다.</span></div></div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>오늘<span class="tabname">TAB 1</span></h2>
+  <p class="sub">시간의 흐름과 긴급도가 위에서 아래로 놓인다. 위험한 것이 맨 위, 오늘 할 것이 가운데, 기록이 맨 아래.</p>
+
+  <dl>
+    <div class="row"><dt>알림 배너</dt><dd>취약점 같은 <strong>critical</strong>만 맨 위에 빨간 테두리로. 나머지는 더보기에 쌓인다.</dd></div>
+    <div class="row"><dt>아침 브리핑</dt><dd>Claude가 쓴 한 문단. 카드 나열이 아니라 읽히는 글이다.</dd></div>
+    <div class="row"><dt>오늘의 핵심</dt><dd>0~100점 중 <strong>상위 3개만</strong>. 왼쪽 숫자가 그 점수다. 누르면 원문이 열리고 목록에서 빠진다.</dd></div>
+    <div class="row"><dt>학교</dt><dd>시간표 칩이 가로로, 그 아래 급식, 그날 학사일정이 있으면 노란 줄로.</dd></div>
+    <div class="row"><dt>할일</dt><dd>기한 가까운 순 6개. 왼쪽 동그라미를 누르면 완료. 24시간 안이면 D-day가 빨갛다.</dd></div>
+    <div class="row"><dt>멈춰 있는 프로젝트</dt><dd><strong>5일 이상</strong> 손 안 댄 것만. 없으면 이 칸 자체가 안 뜬다.</dd></div>
+    <div class="row"><dt>식단</dt><dd>오늘 먹은 것과 합계 kcal. 추가는 <code>+</code> 또는 기록 → 식단에서.</dd></div>
+    <div class="row"><dt>하루 한 줄</dt><dd>화면 하단에 붙어 있다. <strong>식단 입력칸이 아니다</strong> — 먹은 건 <code>+</code>로.</dd></div>
+  </dl>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>프로젝트<span class="tabname">TAB 2</span></h2>
+  <p class="sub">프로젝트마다 보여주는 건 셋뿐이다. 마지막 활동일, 진행도, 다음 할 일 하나.</p>
+
+  <dl>
+    <div class="row"><dt>정체 표시</dt><dd>마지막 활동일로 계산한다. <strong>5일 넘으면</strong> 빨간 배지 + 오늘 화면에 뜨고 텔레그램도 울린다.</dd></div>
+    <div class="row"><dt>다음 할 일</dt><dd>회색 줄을 눌러 바로 수정. 비어 있으면 "하나만 정해라"가 뜬다.</dd></div>
+    <div class="row"><dt>+10%</dt><dd>진행도를 10씩 올린다. 정확한 수치보다 움직이는지가 중요하다.</dd></div>
+    <div class="row"><dt>완료</dt><dd>누르면 아래 완료 섹션으로 내려가고 정체 알림이 멈춘다. 되돌리기도 있다.</dd></div>
+    <div class="row"><dt>목표</dt><dd>마감일 D-day와 진행도. 프로젝트보다 큰 단위 — 대회 제출, 시험, 출시.</dd></div>
+    <div class="row"><dt>남은 할일</dt><dd>프로젝트에 안 묶인 것까지 전부.</dd></div>
+  </dl>
+
+  <div class="note">
+    <b>손을 대면 정체 시계가 리셋된다.</b> 다음 할 일을 고치거나 진행도를 올리거나 그 프로젝트의 할일을 완료하면 마지막 활동일이 오늘로 갱신된다.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>관심사<span class="tabname">TAB 3</span></h2>
+  <p class="sub">수집된 게 카테고리별로 접혀 있다. 첫 카테고리만 펼쳐진 채로 열린다.</p>
+
+  <h3>어디에 뭐가 있나</h3>
+  <div class="scroller">
+    <table>
+      <thead><tr><th>카테고리</th><th>들어오는 것</th><th>출처</th></tr></thead>
+      <tbody>
+        <tr><td>게임</td><td>Steam 인기·신규, 찜한 게임 소식, 게임 뉴스, 게임 추천, 롤 전적, 포챔스·롤 메타 링크</td><td>Steam · Polygon · Riot · Claude</td></tr>
+        <tr><td>개발 · IT</td><td>국내외 IT 뉴스, 해커뉴스 프론트페이지, 내 GitHub 활동, 급상승 저장소, 프레임워크 릴리즈</td><td>ZDNet · The Verge · HN · GitHub</td></tr>
+        <tr><td>AI</td><td>Hugging Face 블로그, OpenAI 소식</td><td>RSS</td></tr>
+        <tr><td>게임 개발</td><td>게임 개발 아티클</td><td>Game Developer</td></tr>
+        <tr><td>보안</td><td>보안 뉴스, <strong>내 라이브러리 취약점</strong></td><td>The Hacker News · OSV</td></tr>
+        <tr><td>하드웨어</td><td>찜한 부품 최저가</td><td>네이버 쇼핑</td></tr>
+        <tr><td><strong>음악</strong></td><td><strong>JPOP 인기 트랙 10곡</strong>, 일본 음악 인기 영상</td><td>Last.fm · YouTube</td></tr>
+        <tr><td>학습</td><td>오늘의 코딩 꿀팁, 오늘 배울 기술 1개</td><td>Claude</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <b>JPOP 순위표는 여기 "음악" 섹션이다.</b> 접혀 있으니 눌러서 펼쳐야 보인다.
+    <code>LASTFM_API_KEY</code>가 있으면 채워지고, 없으면 그 소스만 건너뛴다.
+  </div>
+
+  <h3>점수와 배지</h3>
+  <p>카테고리 오른쪽 노란 숫자는 <strong>아직 안 본 항목 수</strong>다. 항목을 열면 그 카테고리를 본 기록이 남고, 그게 다음 점수 계산에 반영된다 — 자주 여는 분야가 위로 올라온다.</p>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>기록<span class="tabname">TAB 4</span></h2>
+  <p class="sub">칩 여섯 개로 나뉜다. 주소에 <code>?tab=</code>이 붙어서 뒤로가기가 통한다.</p>
+
+  <dl>
+    <div class="row"><dt>한 줄</dt><dd>26주 히트맵. <strong>칸을 누르면</strong> 그날 기록만 필터, 다시 누르면 해제. 기분이 높을수록 진하다.</dd></div>
+    <div class="row"><dt>식단</dt><dd>이름만 넣으면 식약처 DB에서 칼로리를 찾는다. 못 찾으면 오른쪽 칸에 직접. <strong>DB</strong>/<strong>수동</strong> 배지로 구분된다.</dd></div>
+    <div class="row"><dt>에러</dt><dd>제목·본문·해결법을 한 번에 검색. 새로 저장하면 <strong>비슷한 과거 에러</strong>를 옆에 띄운다.</dd></div>
+    <div class="row"><dt>문서고</dt><dd>링크를 붙여넣고 엔터 → 본문을 긁어 3줄 요약. <code>+</code>로 적은 아이디어도 여기 쌓인다.</dd></div>
+    <div class="row"><dt>복습</dt><dd>'오늘 배울 기술'이 <strong>3일 → 7일 → 30일</strong> 뒤 3지선다로 돌아온다. 틀리면 같은 단계를 3일 뒤 다시.</dd></div>
+    <div class="row"><dt>타임라인</dt><dd>대회·프로젝트·행사를 날짜순으로. 연도 칩으로 걸러서 텍스트로 내보낼 수 있다.</dd></div>
+  </dl>
+
+  <p>모든 목록의 오른쪽 <code>✕</code>로 지울 수 있다.</p>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>더보기<span class="tabname">TAB 5</span></h2>
+  <p class="sub">관리 화면. 평소엔 안 와도 되지만 뭔가 안 뜰 때 여기부터 본다.</p>
+
+  <dl>
+    <div class="row"><dt>수집 소스</dt><dd>소스별 최근 성공 시각과 7일간 수집 건수. <strong>3회 연속 실패</strong>하면 위에 빨갛게 모이고 에러 원문이 보인다.</dd></div>
+    <div class="row"><dt>지금 수집</dt><dd>크론을 기다리지 않고 전체를 한 번 돌린다. 성공·실패·건수를 바로 알려준다.</dd></div>
+    <div class="row"><dt>찜 목록</dt><dd>여기에 뭘 넣느냐가 앱 전체를 바꾼다 — 아래 설명 참고.</dd></div>
+    <div class="row"><dt>추이 · 수동 지표</dt><dd>가격·동접자 같은 값의 최근치와 전일 대비 변화율. 자동 수집이 막힌 건(포챔스 사용률 등) 직접 넣는다.</dd></div>
+    <div class="row"><dt>주간 리포트</dt><dd>일요일 21시 자동. 기다리기 싫으면 <strong>지금 생성</strong>.</dd></div>
+    <div class="row"><dt>알림 기록</dt><dd>보낸 것과 <strong>앱에만</strong> 남은 것(하루 3건 한도 초과분)이 함께 보인다.</dd></div>
+    <div class="row"><dt>전체 백업</dt><dd>17개 테이블을 JSON 한 파일로. 이 파일 하나로 복원된다.</dd></div>
+  </dl>
+
+  <h3>찜 목록이 소스를 복제한다</h3>
+  <p>여기에 항목을 하나 추가하면 그 항목을 도는 수집 소스가 통째로 늘어난다.</p>
+  <div class="scroller">
+    <table>
+      <thead><tr><th>종류</th><th>넣는 값</th><th>따라 붙는 것</th></tr></thead>
+      <tbody>
+        <tr><td>Steam 앱ID</td><td class="num">730</td><td>게임 소식 · 동시접속자 · 리뷰 긍정률</td></tr>
+        <tr><td>ITAD 게임ID</td><td>게임 UUID</td><td>최저가 추적 + 가격 변동 알림</td></tr>
+        <tr><td>부품 검색어</td><td>RTX 5070</td><td>네이버 쇼핑 최저가 추이</td></tr>
+        <tr><td>패키지</td><td class="num">npm:next</td><td>OSV 취약점 검사</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>빠른 기록<span class="tabname">+ 버튼</span></h2>
+  <p class="sub">이 앱의 핵심 기능. 화면 어디서든 오른쪽 아래에 떠 있다.</p>
+
+  <div class="flow">
+    <div class="step"><div><b>한 줄 적고 엔터</b><span>즉시 목록에 꽂힌다. 분류를 기다리지 않는다.</span></div></div>
+    <div class="step"><div><b>백그라운드에서 분류</b><span>Claude가 할일 · 아이디어 · 식단 · 에러 · 한 줄 중 하나로 정하고 필요한 값을 뽑는다.</span></div></div>
+    <div class="step"><div><b>실제 테이블로 들어간다</b><span>식단이면 칼로리까지 붙고, 할일이면 마감과 프로젝트가 연결된다.</span></div></div>
+    <div class="step"><div><b>틀렸으면 칩을 탭</b><span>누를 때마다 다음 종류로 바뀌고 이전 기록은 지워진다. 바꾸는 동안엔 잠긴다.</span></div></div>
+  </div>
+
+  <div class="note">
+    <b>분류 실패해도 원문은 남는다.</b> 칩이 "분류 실패"로 바뀌니 탭해서 직접 지정하면 된다.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>알아서 도는 것</h2>
+  <p class="sub">여섯 개가 정해진 시각에 돈다. 시각은 한국 시간 기준이고, 무료 플랜에서는 ±59분 오차가 있다.</p>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>KST</th><th>하는 일</th></tr></thead>
+      <tbody>
+        <tr><td class="num">06:00</td><td>전체 수집 + 복습 문제 생성 + 알림 조건 검사</td></tr>
+        <tr><td class="num">07:00</td><td>아침 브리핑 생성 → 텔레그램 발송</td></tr>
+        <tr><td class="num">09:00</td><td>알림 조건만 다시 검사</td></tr>
+        <tr><td class="num">12:00</td><td>수집 (해커뉴스·해외 IT)</td></tr>
+        <tr><td class="num">21:00</td><td>수집 (게임 뉴스·게임 개발·음악)</td></tr>
+        <tr><td class="num">일 21:00</td><td>주간 방향성 리포트 → 텔레그램 발송</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>울리는 조건</h2>
+  <p class="sub">이 다섯 가지 말고는 침묵한다. 조용한 게 기본값이다.</p>
+
+  <dl>
+    <div class="row"><dt>가격 변동</dt><dd>찜한 것이 임계치(기본 <strong>±5%</strong>) 이상 움직였을 때</dd></div>
+    <div class="row"><dt>보안 취약점</dt><dd>내가 쓰는 라이브러리에서 새로 발견됐을 때 — 유일하게 <strong>critical</strong></dd></div>
+    <div class="row"><dt>프로젝트 정체</dt><dd><strong>5일</strong> 이상 손을 안 댔을 때</dd></div>
+    <div class="row"><dt>마감 임박</dt><dd>할일 기한이 <strong>24시간</strong> 안일 때</dd></div>
+    <div class="row"><dt>소스 실패</dt><dd>수집 소스가 <strong>3회 연속</strong> 실패했을 때</dd></div>
+  </dl>
+
+  <p><strong>하루 최대 3건</strong>, 같은 내용은 <strong>7일간</strong> 다시 안 보낸다. 한도를 넘은 것은 발송하지 않고 더보기 → 알림 기록에 "앱에만"으로 남는다.</p>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>점수는 이렇게 매겨진다</h2>
+  <p class="sub">0~100점. 상위 3개만 오늘의 핵심으로 올라가고, 한 카테고리가 화면을 다 먹지 않게 카테고리당 최대 2개로 제한된다.</p>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>조건</th><th>점수</th></tr></thead>
+      <tbody>
+        <tr><td>찜·구독한 대상이 제목이나 요약에 들어 있음</td><td class="num">+40</td></tr>
+        <tr><td>보안 취약점</td><td class="num">+30</td></tr>
+        <tr><td>추이 변화 20% / 10% / 5% 이상</td><td class="num">+25 / +18 / +12</td></tr>
+        <tr><td>최근 7일간 자주 열어본 카테고리</td><td class="num">최대 +20</td></tr>
+        <tr><td>발행 24시간 / 72시간 / 7일 이내</td><td class="num">+15 / +9 / +4</td></tr>
+        <tr><td>이미 본 것</td><td class="num">−25</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>관심사 하나 더 넣기</h2>
+  <p class="sub">코드는 건드리지 않는다. <code>config/sources.json</code>에 객체 하나를 추가하면 다음 수집부터 카드가 뜬다.</p>
+
+<pre><code>{
+  <span class="k">"key"</span>: "my_new_feed",     <span class="c">// 소문자·숫자·밑줄</span>
+  <span class="k">"category"</span>: "dev",        <span class="c">// 화면에서 묶이는 단위</span>
+  <span class="k">"kind"</span>: "rss",            <span class="c">// rss | rest | github | llm — 이 넷뿐</span>
+  <span class="k">"title"</span>: "새 피드",
+  <span class="k">"endpoint"</span>: "https://example.com/feed.xml",
+  <span class="k">"schedule"</span>: "daily",       <span class="c">// morning | noon | night | daily | hourly</span>
+  <span class="k">"limit"</span>: 10
+}</code></pre>
+
+  <p>추가한 뒤 검증:</p>
+<pre><code>npm run sources:check</code></pre>
+
+  <p>키 중복, 빠진 필수 필드, 선언 안 한 환경변수까지 잡아준다. 코드를 고쳐야 한다면 설계가 틀린 것이다.</p>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>키를 넣으면 켜지는 것</h2>
+  <p class="sub">없어도 앱은 돈다. 해당 소스만 조용히 건너뛴다.</p>
+
+  <div class="scroller">
+    <table>
+      <thead><tr><th>환경변수</th><th>켜지는 기능</th></tr></thead>
+      <tbody>
+        <tr><td><span class="dot on"></span>필수 6개</td><td>Supabase 2 · 암구호 · 세션 · 크론 · Claude</td></tr>
+        <tr><td><span class="dot off"></span>TELEGRAM</td><td>브리핑과 알림 푸시 — 없으면 앱 안에만 쌓인다</td></tr>
+        <tr><td><span class="dot off"></span>NEIS</td><td>급식 · 시간표 · 학사일정 (삼일공고 <code>J10</code> / <code>7530335</code>)</td></tr>
+        <tr><td><span class="dot off"></span>DATA_GO_KR</td><td>음식 칼로리 자동 계산</td></tr>
+        <tr><td><span class="dot off"></span>GITHUB</td><td>내 활동 카드</td></tr>
+        <tr><td><span class="dot off"></span>LASTFM</td><td><strong>JPOP 순위표</strong></td></tr>
+        <tr><td><span class="dot off"></span>YOUTUBE</td><td>일본 음악 인기 영상</td></tr>
+        <tr><td><span class="dot off"></span>NAVER</td><td>부품 최저가 추적</td></tr>
+        <tr><td><span class="dot off"></span>ITAD · STEAM</td><td>게임 최저가 · 동시접속자</td></tr>
+        <tr><td><span class="dot off"></span>RIOT</td><td>롤 전적 (개발 키는 24시간마다 만료)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note warn">
+    <b>SUPABASE_SERVICE_ROLE_KEY에 NEXT_PUBLIC_을 붙이지 말 것.</b>
+    붙이는 순간 브라우저로 새어나가고, 그 키 하나로 DB 전체가 열린다.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── -->
+<section>
+  <h2>안 뜰 때 보는 순서</h2>
+
+  <dl>
+    <div class="row"><dt>관심사가 비었다</dt><dd>더보기 → 지금 수집 → 빨간 소스의 에러 원문을 읽는다</dd></div>
+    <div class="row"><dt>학교 칸이 비었다</dt><dd>NEIS 5개를 넣고 <strong>재배포</strong>했는지. 환경변수는 저장만으로 반영되지 않는다</dd></div>
+    <div class="row"><dt>시간표만 없다</dt><dd><code>NEIS_GRADE</code>와 <code>NEIS_CLASS</code>가 비어 있다</dd></div>
+    <div class="row"><dt>칼로리가 안 붙는다</dt><dd><code>DATA_GO_KR_KEY</code> 확인. 그래도 안 되면 응답 필드 코드가 바뀐 것</dd></div>
+    <div class="row"><dt>분류가 계속 실패</dt><dd><code>ANTHROPIC_API_KEY</code> 확인</dd></div>
+    <div class="row"><dt>로그인 없이 열린다</dt><dd><code>middleware.ts</code>가 <code>src/</code> 안에 있는지. 밖에 있으면 조용히 무시된다</dd></div>
+  </dl>
+</section>
+
+<footer>
+  화면 5 · 자동 작업 6 · 알림 조건 5 · 수집 소스 27 · 테이블 17<br>
+  수집 소스를 늘려도 이 문서는 그대로다 — 새 관심사는 JSON 한 줄이지 새 기능이 아니다.
+</footer>
+
+</div>
